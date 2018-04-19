@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login page</title>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0/css/bootstrap.min.css" />
+</head>
+<body>
+
+<div class="container">
+    <div class="row mt-4">
+        <div class="col">
+        	<div class="card">
+        		<div class="card-body">
+        			
+        			<h3 class="card-title mb-4">Please Log In</h3>
+        			
+        			<form th:action="@{/login}" method="post">
+		                <fieldset>
+		
+		                    <div th:if="${param.error}">
+		                        <div class="alert alert-danger">
+		                            Error while logging in.
+		                        </div>
+		                    </div>
+		
+		                    <div class="form-group">
+		                        <input type="text" name="username" id="username" class="form-control input-lg" 
+		                        		placeholder="Username" required="true" autofocus="true"/>
+		                    </div>
+		                    <div class="form-group">
+		                        <input type="password" name="password" id="password" class="form-control input-lg"
+		                               placeholder="Password" required="true"/>
+		                    </div>
+		
+		                    <div class="row">
+		                        <div class="col">
+		                            <input type="submit" class="btn btn-primary" value="Log In"/>
+		                        </div>
+		                    </div>
+		                </fieldset>
+		            </form>
+        		</div>
+        	</div>
+            
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

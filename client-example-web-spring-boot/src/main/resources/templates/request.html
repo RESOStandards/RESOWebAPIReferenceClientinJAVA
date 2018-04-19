@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Request page</title>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0/css/bootstrap.min.css" />
+</head>
+<body>
+
+<div class="container">
+    <div class="row mt-4">
+        <div class="col">
+        	<div class="card">
+        		<div class="card-body">
+        			
+        			<h3 class="card-title mb-4">Enter the request</h3>
+        			
+        			<form th:action="@{/request}" method="post">
+		                <fieldset>
+		                
+		                    <div class="form-group">
+		                        <input type="text" name="request" id="request" class="form-control input-lg" 
+		                        		placeholder="Request" required="true" autofocus="true"/>
+		                    </div>
+		                    
+		                    <div class="form-group">
+		                        <select name="format" id="format" class="form-control input-lg">
+		                        	<option>JSON</option>
+		                        	<option>XML</option>
+		                        </select>
+		                    </div>
+		                    
+		                    <div class="row">
+		                        <div class="col">
+		                            <input type="submit" class="btn btn-primary" value="Request"/>
+		                        </div>
+		                    </div>
+		                </fieldset>
+		            </form>
+        		</div>
+        	</div>
+            
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col">
+        	<div class="card">
+        		<div class="card-body">
+        			
+        			<h3 class="card-title mb-4">Response</h3>
+        			
+        			<div th:text="${content}"></div>
+        			
+        		</div>
+        	</div>
+            
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>
