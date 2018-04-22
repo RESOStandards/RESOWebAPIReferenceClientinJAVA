@@ -17,6 +17,7 @@ public class ResoClientExampleCli {
 	private OpenIDConnectClient openIDClient;
 	private ResoClient resoClient;
 	private TokenStore tokenStore;
+	private FileOutputResoClientWrapper resoWrapper;
 	private String username;
 	private String password;
 	private String redirectUri;
@@ -53,6 +54,9 @@ public class ResoClientExampleCli {
 		password = properties.getProperty("password");
 		redirectUri = properties.getProperty("redirectUri");
 		scope = properties.getProperty("scope", "openid");
+		
+		// create file output wrapper
+		resoWrapper = new FileOutputResoClientWrapper(resoClient);
 	}
 	
 	public String authorizeUser() {
@@ -65,6 +69,10 @@ public class ResoClientExampleCli {
 	
 	public String executeRequest(String request) {
 		return resoClient.get(request, ResponseFormat.JSON);
+	}
+	
+	public void executeRequestToFile(String request, String fileName) {
+		resoWrapper.get(request, ResponseFormat.JSON, fileName);
 	}
 	
 	public static void main(String[] args) {
@@ -86,9 +94,11 @@ public class ResoClientExampleCli {
 		
 		// execute request
 		String content = cli.executeRequest("Property?$top=3");
+		System.out.println("Request executed! Content length " + content.length());
 		
-		System.out.println("Done! Content length " + content.length());
-		
+		// execute request to file
+		cli.executeRequestToFile("Property?$top=3", "output.json");
+		System.out.println("Request executed! Written to file output.json");
 	}
 	
 	
