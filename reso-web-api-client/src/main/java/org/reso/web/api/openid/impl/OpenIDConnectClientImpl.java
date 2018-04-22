@@ -10,10 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.http.HttpHeaders;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.ProtocolException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CookieStore;
@@ -25,7 +22,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.client.protocol.RequestAddCookies;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -38,7 +34,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -154,20 +149,7 @@ public class OpenIDConnectClientImpl implements OpenIDConnectClient {
 		URI uri = getAuthorizeURI(redirectUri, scope);
 		
 		// create the closable client to work with
-		try (CloseableHttpClient client = HttpClientBuilder.create()
-				.setRedirectStrategy(new MyLaxRedirectStrategy())
-				.setDefaultRequestConfig(
-						RequestConfig.custom()
-							.setCookieSpec(CookieSpecs.DEFAULT)
-							.build())
-				.setSSLSocketFactory(
-						new SSLConnectionSocketFactory(
-								SSLContexts.custom()
-									.loadTrustMaterial(null, new TrustSelfSignedStrategy())
-									.build(),
-								NoopHostnameVerifier.INSTANCE
-								))
-				.build()) {
+		try (CloseableHttpClient client = getHttpClientBuilder().build()) {
 			
 			// create client context to store
 			// the cookies for the requests
@@ -178,7 +160,7 @@ public class OpenIDConnectClientImpl implements OpenIDConnectClient {
 			// build authorization URL
 			// and create a HTTP GET request
             HttpGet httpGet = new HttpGet(uri);
-
+            
             // Execute the request
             CloseableHttpResponse authResponse = client.execute(httpGet, context);
             String responseBody = EntityUtils.toString(authResponse.getEntity());
@@ -203,11 +185,6 @@ public class OpenIDConnectClientImpl implements OpenIDConnectClient {
             // using form submit
 			HttpPost post = new HttpPost(loginParams.getActionUrl());
 			post.addHeader(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded"));
-			//post.addHeader(new BasicHeader(HttpHeaders.ACCEPT, "text/html"));
-			
-			// Make sure cookie headers are written 
-			RequestAddCookies addCookies = new RequestAddCookies();
-			addCookies.process(post, context);
 			
 			// create post parameters by adding
 			// all login form params as post entity
@@ -220,10 +197,6 @@ public class OpenIDConnectClientImpl implements OpenIDConnectClient {
 			
 			if (log.isInfoEnabled())
             	log.info("Posting user credentials to login action URL: "+loginParams.getActionUrl());
-			if (log.isDebugEnabled()) {
-				log.debug("Post headers: "+Arrays.asList(post.getAllHeaders()).stream().map(h -> h.toString()).collect(Collectors.joining(", ")));
-				log.debug("Post parameters: "+params);
-			}
 			
 			// execute the login POST request
 			// We do not inspect the response 
@@ -232,6 +205,8 @@ public class OpenIDConnectClientImpl implements OpenIDConnectClient {
 			CloseableHttpResponse postResponse = client.execute(post, context);
 			
 			if (log.isDebugEnabled()) {
+				log.debug("Login post headers: "+Arrays.asList(context.getRequest().getAllHeaders()).stream().map(h -> h.toString()).collect(Collectors.joining(", ")));
+				log.debug("Login post parameters: "+params);
             	log.debug("Login post response: " + postResponse);
             	log.debug("Login post response content: " + EntityUtils.toString(postResponse.getEntity()));
 			}
@@ -324,6 +299,7 @@ public class OpenIDConnectClientImpl implements OpenIDConnectClient {
 		// build access token specific params
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("grant_type", "refresh_token"));
+		params.add(new BasicNameValuePair("client_id", clientId));
 		params.add(new BasicNameValuePair("refresh_token", refreshToken));
 		
 		// call inner getToken with required token name
@@ -343,8 +319,7 @@ public class OpenIDConnectClientImpl implements OpenIDConnectClient {
         		AuthScope.ANY, 
         		new UsernamePasswordCredentials(clientId, clientSecret));
         
-		try (CloseableHttpClient client = HttpClientBuilder.create()
-				.setRedirectStrategy(new LaxRedirectStrategy())
+		try (CloseableHttpClient client = getHttpClientBuilder()
 				.setDefaultCredentialsProvider(credsProvider)
 				.build()) {
 			
@@ -375,9 +350,12 @@ public class OpenIDConnectClientImpl implements OpenIDConnectClient {
             // build token set
             TokenSetImpl tokenSet = new TokenSetImpl();
             tokenSet.setTimeCreated(LocalDateTime.now());
-            tokenSet.setExpiresInSeconds(jsonObj.getInt("expires_in"));
-            tokenSet.setAccessToken(jsonObj.getString("access_token"));
-            tokenSet.setRefreshToken(jsonObj.getString("refresh_token"));
+            if (jsonObj.has("expires_in"))
+            	tokenSet.setExpiresInSeconds(jsonObj.getInt("expires_in"));
+            if (jsonObj.has("access_token"))
+            	tokenSet.setAccessToken(jsonObj.getString("access_token"));
+            if (jsonObj.has("refresh_token"))
+            	tokenSet.setRefreshToken(jsonObj.getString("refresh_token"));
             
             return tokenSet;
 		} catch (ApiCallException ace) {
@@ -390,18 +368,25 @@ public class OpenIDConnectClientImpl implements OpenIDConnectClient {
 		}
 	}
 	
-	private class MyLaxRedirectStrategy extends LaxRedirectStrategy {
-		
-		@Override
-		public URI getLocationURI(HttpRequest request,
-                HttpResponse response,
-                HttpContext context)
-         throws ProtocolException {
-			URI location = super.getLocationURI(request, response, context);
-			System.out.println("MY STRATEGY: "+location);
-			return location;
-		}
-		
+	/**
+	 * Returns configuration of HttpClientBuilder
+	 * used to build the HttpClient instance.
+	 */
+	protected HttpClientBuilder getHttpClientBuilder() throws Exception {
+		return HttpClientBuilder.create()
+		.setRedirectStrategy(LaxRedirectStrategy.INSTANCE)
+		.setUserAgent("Mozilla/5.0")
+		.setDefaultRequestConfig(
+				RequestConfig.custom()
+					.setCookieSpec(CookieSpecs.STANDARD)
+					.build())
+		.setSSLSocketFactory(
+				new SSLConnectionSocketFactory(
+						SSLContexts.custom()
+							.loadTrustMaterial(null, new TrustSelfSignedStrategy())
+							.build(),
+						NoopHostnameVerifier.INSTANCE
+						));
 	}
 
 }

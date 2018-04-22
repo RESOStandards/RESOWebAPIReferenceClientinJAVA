@@ -12,7 +12,7 @@ public class TokenSetImpl implements TokenSet {
 	private String accessToken;
 	private String refreshToken;
 	private LocalDateTime timeCreated;
-	private int expiresInSeconds;
+	private Integer expiresInSeconds;
 	
 	/**
 	 * Gets access token.
@@ -64,7 +64,7 @@ public class TokenSetImpl implements TokenSet {
 	 * Number in seconds access token expires in.
 	 * @return
 	 */
-	public int getExpiresInSeconds() {
+	public Integer getExpiresInSeconds() {
 		return expiresInSeconds;
 	}
 	
@@ -72,7 +72,7 @@ public class TokenSetImpl implements TokenSet {
 	 * Sets the number in seconds access token expires in.
 	 * @param expiresInSeconds
 	 */
-	public void setExpiresInSeconds(int expiresInSeconds) {
+	public void setExpiresInSeconds(Integer expiresInSeconds) {
 		this.expiresInSeconds = expiresInSeconds;
 	}
 	
@@ -83,7 +83,9 @@ public class TokenSetImpl implements TokenSet {
 	 */
 	public boolean isValid() {
 		if (accessToken == null || accessToken.trim().isEmpty()) return false;
-		return timeCreated.plusSeconds(expiresInSeconds).isAfter(LocalDateTime.now());
+		if (expiresInSeconds != null)
+			return timeCreated.plusSeconds(expiresInSeconds).isAfter(LocalDateTime.now());
+		return true;
 	}
 	
 	@Override
