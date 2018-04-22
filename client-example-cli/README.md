@@ -1,7 +1,8 @@
 # Reso Web API Java client CLI example
 
 This example is a simple Reso Web API CLI implementation. 
-It uses configuration properties to setup the `ResoClient` and execute simple request. 
+It uses configuration properties to setup the `ResoClient` and execute simple request.
+It also uses custom wrapper `FileOutputResoClientWrapper` to write response to file. 
 
 Fill the configuration properties in file:
 
