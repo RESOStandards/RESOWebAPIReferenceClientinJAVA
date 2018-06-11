@@ -32,7 +32,7 @@ All required dependencies will be downloaded by `maven` during the build.
 
 ## Getting Started
 
-A short guide on how to start using the code set is provided in [here](./lib/reso-web-api-client/README.md)
+A short guide on how to start using the code set is provided in [here](./lib/reso-web-api-client/README.md).
 
 ## Example apps
 
@@ -41,15 +41,16 @@ Example apps are provided in the [examples](./examples) folder to demonstrate th
 * [client-example-cli](./examples/client-example-cli) - demonstrates the client usage in a simple CLI program.
 * [client-example-web-spring-boot](./examples/client-example-web-spring-boot) - demonstrates the client usage in a WEB environment using `SpringBoot`.
 
-## Specific code configuration, usage guidelines, depending on situation
+## Specific usage guidelines
 
-Tests and examples require valid authorization for the tested RESO endpoints. 
-Before running tests or examples one must configure the connection properties usually located in application.properties files of each application.
-Please follow the description in each application for the exact location of configuration file.
+Running tests and examples requires valid authorization for the tested RESO endpoint. 
+Before running tests and examples one must configure the connection properties that are usually located in `application.properties` files of each application.
+Please follow the description of each application for the exact location of configuration file.
 
 ## Tests
 
 Folder [tests](./tests) contains separate project for integration testing. Details on how to run integration tests are provided [here](./tests/client-integration-tests/README.md).
+
 New integration tests may be created by adding them to the existing integration test project, or by creating a new integration test project in [tests](./tests) folder and providing the required project description.
 Please follow the contributing guidelines when providing new tests.
 
