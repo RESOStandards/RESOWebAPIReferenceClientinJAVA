@@ -11,8 +11,8 @@ Software and associated documentation files a non-exclusive, worldwide, royalty-
 reproduce, use, copy, modify, merge, publish, distribute, sublicense, and prepare derivative works of the
 Software.
 
-2. Copyright notice: The Software is Copyright (C) 2017 RESO. The RESO copyright notice may take
-either of the following forms: (i) “Copyright 2017 RESO” or (ii) “© 2017 RESO.”
+2. Copyright notice: The Software is Copyright (C) 2018 RESO. The RESO copyright notice may take
+either of the following forms: (i) “Copyright 2018 RESO” or (ii) “© 2018 RESO.”
 
 3. Conditions for redistribution: Redistribution and use of the Software in source and/or binary forms,
 with or without modification, are permitted provided that the following conditions are met:
