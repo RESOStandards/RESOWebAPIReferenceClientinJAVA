@@ -1,6 +1,6 @@
 # Contributing to RESO SDK JAVA
 
-The following is a set of guidelines for contributing to RESO SDK JAVA. When contributing to this repository, please first discuss the change you wish to make via issue instance in the GitHub repository before making a change. 
+The following is a set of guidelines for contributing to RESO SDK JAVA. When contributing to this repository, please first discuss the change you wish to make via issue instance in the GitHub repository before making a change. Developers wishing more information on how to contribute please visit [RESO Developers FAQ](https://www.reso.org/developer-faqs/working-with-github/).
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
