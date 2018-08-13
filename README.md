@@ -1,6 +1,8 @@
 # RESO SDK JAVA
 
-Reso Web API Java client library allows developers to build applications by utilizing the Reso Web API. For more information please visit [www.reso.org](http://www.reso.org).
+Reso Web API Java client library allows developers to build applications by utilizing the Reso Web API. For more information on the Real Estate Standards Organization (RESO) please visit [www.reso.org](http://www.reso.org) or contact [github@reso.org](mailto:github@reso.org). Developers wishing to better understand how to use and contribute to our standards visit [RESO Developers FAQ](https://www.reso.org/developer-faqs/working-with-github/).
+
+Specific questions about this repository should be posted to the 'Issues' section with the [Issue Template](ISSUE_TEMPLATE.md). 
 
 ## Requirements
 
