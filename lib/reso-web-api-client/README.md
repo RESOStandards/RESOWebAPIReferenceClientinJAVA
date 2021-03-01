@@ -1,12 +1,35 @@
 # Reso Web API Java client library
 Reso Web API Java client library allows developers to build applications by utilizing the Reso Web API. For more information please visit [www.reso.org](http://www.reso.org).
 
-## Building the code
+## Reso Web API as a dependency
+
+### Local Installation
+
 To build the client and install it to local repository run the following command:
 
 ```
 mvn install
 ```
+
+### Using jitpack.io
+
+Jitpack builds and publishes git repositories on demand and provides ready to use artifacts. Your build tool will automatically download **reso-web-api-client** as a dependency without the need for local repository installation. Specifying a commit hash also ensures that all team members are using the same version.
+
+####Maven snippet:
+```xml
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
+```
+```xml
+<dependency>
+    <groupId>com.github.RESOStandards.RESO-WebAPI-Client-Java</groupId>
+    <artifactId>reso-web-api-client</artifactId>
+    <version>[commit-hash]</version>
+</dependency>
+```
+For more information, please see [jitpack.io](https://jitpack.io/#RESOStandards/RESO-WebAPI-Client-Java).
 
 ## Using the client
 Here are some basic client usage steps to follow.
