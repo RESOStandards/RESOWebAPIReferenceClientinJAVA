@@ -1,7 +1,9 @@
 # DEPRECATION NOTICE
 RESO is no longer maintaining or supporting this codebase.
 
-If you are actively using this library and would like to "adopt" it, please contact dev@reso.org
+Developers should be using popular OAuth2 and HTTP libraries specific to their platforms instead.
+
+If you are actively using this library and would like to "adopt" it, please contact dev@reso.org.
 
 This repository will be made private after August 1, 2021.
 
